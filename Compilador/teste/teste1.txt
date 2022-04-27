@@ -1,13 +1,3 @@
  int main () {
-    float x, result;
-    int pot;
-    printf("Digite um valor real: \n");
-    scanf("%f", &x);
-    printf("Digite um valor inteiro: \n");
-    scanf("%d", &pot);
-for(result=1; pot>=1; pot--){
-  result*=x;
-}
-     printf("O resultado da potência é:%f\n", result);
-return 0;
+    int x = 9
   }
