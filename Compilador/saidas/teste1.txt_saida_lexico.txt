@@ -1,0 +1,10 @@
+PALAVRA RESERVADA: int - linha: 1 - coluna: 3
+PALAVRA RESERVADA: main - linha: 1 - coluna: 8
+CARAC. ESPECIAL: ( - linha: 1 - coluna: 10
+CARAC. ESPECIAL: ) - linha: 1 - coluna: 11
+CARAC. ESPECIAL: { - linha: 1 - coluna: 13
+PALAVRA RESERVADA: int - linha: 2 - coluna: 6
+ID: x - linha: 2 - coluna: 9
+EX. ARITMETICA: = - linha: 2 - coluna: 10
+NUMERO: 9 - linha: 2 - coluna: 12
+CARAC. ESPECIAL: } - linha: 3 - coluna: 0
