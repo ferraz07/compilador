@@ -28,14 +28,9 @@ def lexico(arquivo, iden):
         index = 0
         count_linhas += 1
         for index in range(len(line)):
-            #palavra = palavra + line[index]
-            #print(palavraOK + "1")
             if line[index] != " ":
                 palavra = palavra + line[index]
                 count_carac += 1
-                print(count_carac)
-                print("palavra:" + palavra)
-                #palavra = palavra + line[index]
                 if count_carac == 1:
                     sentinela = index
                     if re.findall(er_numero, line[index]):
@@ -70,34 +65,27 @@ def lexico(arquivo, iden):
                         index+=1
                         palavra = ""
                 elif count_carac == 2:
-                    print(f"palavra {index}: " + palavra)
                     if re.findall(er_numero, palavra):
-                        print("ENTREI NUMERO")
                         palavraOK = palavra
-                        #if re.match(er_separadores, line[index + 1]) != None:
                         saida.write(f"NUMERO: {palavraOK} - linha: {count_linhas} - coluna: {sentinela}\n")
                         count_carac = 0
                         palavra = ""
                     elif re.findall(er_logica, palavra):
-                        print("ENTREI logica")
                         palavraOK = palavra
                         saida.write(f"EX. LOGICA: {palavraOK} - linha: {count_linhas} - coluna: {index}\n")
                         count_carac = 0
                         palavra = ""
                     elif re.findall(er_aritmetica, palavra):
-                        print("ENTREI arit")
                         palavraOK = palavra
                         saida.write(f"EX. ARITMETICA: {palavraOK} - linha: {count_linhas} - coluna: {index}\n")
                         count_carac = 0
                         palavra = ""
                     elif palavra in pl_reservadas:
-                        print("ENTREI reservadas")
                         palavraOK = palavra
                         saida.write(f"PALAVRA RESERVADA: {palavraOK} - linha: {count_linhas} - coluna: {index}\n")
                         count_carac = 0
                         palavra = ""
                     elif re.findall(er_id, line[index]):
-                        print("ENTREI id")
                         palavraOK = palavra
                         if re.match(er_separadores, line[index + 1]) != None:
                             palavraOK = palavra
@@ -108,7 +96,6 @@ def lexico(arquivo, iden):
                         count_carac = 0
                         palavra = line[index]
                 elif count_carac >= 3:
-                    print("ENTREI NO ELSE 3") 
                     if re.findall(er_numero, palavra):
                         palavraOK = palavra
                     elif palavra in pl_reservadas:
@@ -117,8 +104,6 @@ def lexico(arquivo, iden):
                         count_carac = 0
                         palavra = "" 
                     elif re.findall(er_id, palavra):
-                        print(re.findall(er_id, palavra))
-                        print("AQUI  COLOCAMOS")
                         palavraOK = palavra  
                 else:
                     print(f"Erro encontrado na linha: {count_linhas}, token: {palavra}\n")
@@ -126,7 +111,6 @@ def lexico(arquivo, iden):
                     index +=1
                     palavra = ""     
             else:
-                print("entrei no else final")
                 if re.match(er_separadores, line[index]) == " ":
                     palavra = ""
                     count_carac = 0
