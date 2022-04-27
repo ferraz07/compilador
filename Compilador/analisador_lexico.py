@@ -52,6 +52,18 @@ def lexico(arquivo, iden):
                             saida.write(f"EX. ARITMETICA: {palavraOK} - linha: {count_linhas} - coluna: {sentinela}\n")
                             count_carac = 0
                             palavra = ""
+                    elif line[index] == '"':
+                        index_auxiliar = index
+                        index_auxiliar += 1
+                        while line[index_auxiliar] != '"':
+                            palavra += line[index_auxiliar]
+                            palavraOK = palavra
+                            index_auxiliar += 1
+                            print(index_auxiliar)
+                        palavraOK = palavra + line[index_auxiliar]
+                        saida.write(f"STRING: '{palavraOK}' - linha: {count_linhas} - coluna: {sentinela}\n")
+                        palavra = ""
+                        count_carac = 0
                     elif re.findall(er_especial, line[index]):
                         palavraOK = palavra
                         saida.write(f"CARAC. ESPECIAL: {palavraOK} - linha: {count_linhas} - coluna: {sentinela}\n")
