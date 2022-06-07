@@ -1,4 +1,5 @@
 import re
+from sintatico import sintatico
 
 pl_reservadas = ["int", 'float', 'char', 'void', 'printf',
                  'scanf', 'return', 'if', 'else', 'while', 'do', 'for', 'main']
