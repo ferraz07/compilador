@@ -1,37 +1,62 @@
+# na tabelaVerificar temos que 1 representa que foi declarado, 2 representada que foi incializado, 3 representa que o ID é uma funcao.
 
-def sintatico(vetorTokens):
-    file = './saidas/'+ '_saida_sintatico.txt'
+def sintatico(iden, vetorTokens, vetorIDs):
+    file = './saidas/'+ iden + '_saida_sintatico.txt'
     saida = open(file, 'w')
+    geracao_codigo = './saidas/'+ iden + '_saida_geracao_codigo.txt'
+    geracao_cod = open(geracao_codigo, 'w')
     global vetTokens
     global posicao
     posicao = 0
     vetTokens = []
+    tabelaAtt = []
+    tabelaVerificar = []
     cont = 0
     while cont < len(vetorTokens):
         vetTokens.insert(cont, vetorTokens[cont])
         cont +=1
-    token = 0
     i = 0
+    numero = 0
+    contadorId = 0
+    contadorTabela = 0
     while i < len(vetTokens):   
         if vetTokens[posicao] == 2:
             validadeDec = verificarDec(vetTokens[posicao+1], posicao+1)
             if validadeDec == True:
+                if vetorIDs[contadorTabela] in tabelaAtt:
+                    print(f"Variavel com esse nome ja declarada: {vetorIDs[contadorId]}\n")
+                else:
+                    tabelaAtt.insert(contadorTabela, vetorIDs[contadorTabela])
+                    tabelaVerificar.insert(contadorTabela, 1)
                 saida.write("DECLARACAO \n")
+                geracao_cod.write(f"var{numero}:  .word\n")
+                contadorTabela = contadorTabela + 1
+                contadorId = contadorId + 1
+                numero = numero + 1
                 posicao = posicao + 2
                 i = i+2
             else:
                 validadeFunc = verificarFuncao(vetTokens[posicao+1], posicao+1)
                 if validadeFunc == True:
                     saida.write("FUNCAO  \n")
+                    geracao_cod.write(f"/*label*/\n{vetorIDs[contadorId]}: \n")
+                    tabelaAtt.insert(contadorTabela, vetorIDs[contadorTabela])
+                    tabelaVerificar.insert(contadorId, 3)
+                    contadorTabela = contadorTabela + 1
+                    contadorId = contadorId + 1
                     posicao = posicao + 4
                     i=i+4
                 else:
                     print("ERRO SINTATICO - Funcao\n")
-                #posicao = posicao - 1
         elif vetTokens[posicao] == 3:
             validadeAtt = verificarAtt(vetTokens[posicao+1], posicao+1)
             if validadeAtt == True:
                 saida.write("ATRIBUICAO \n")
+                geracao_cod.write(f"li $s{numero}, {numero+2}\n")
+                tabelaVerificar.insert(contadorId, 2)
+                contadorId = contadorId + 1
+                contadorTabela = contadorTabela + 1
+                numero = numero + 1
                 posicao = posicao + 2
                 i = i+2
             else:
@@ -39,7 +64,11 @@ def sintatico(vetorTokens):
         elif vetTokens[posicao] == 8:
             validadeFor = verificarFor(vetTokens[posicao+1], posicao+1)
             if validadeFor == True:
+                contadorTabela = contadorTabela + 3
+                contadorId = contadorId + 3
                 saida.write("FOR \n")
+                geracao_cod.write(
+                    f"move $s0, $zero\n/*label*/\nFOR:\nslt $t0, $s0 ,$s{numero}\nbeq $t0, $zero, EXIT\naddi $s0, $s0, 1\nj FOR\n\nEXIT\n")
                 posicao = posicao + 12
                 i = i+12
             else:
@@ -48,6 +77,9 @@ def sintatico(vetorTokens):
             validadeWhile = verificarWhile(vetTokens[posicao+1], posicao+1)
             if validadeWhile == True:
                 saida.write("WHILE \n")
+                geracao_cod.write(f"/*label*/\nWHILE: \nbne $t{numero}, $s{numero}, EXIT\nj WHILE\n")
+                contadorTabela = contadorTabela + 1
+                numero = numero + 1
                 posicao = posicao + 5
                 i = i + 5
             else:
@@ -56,6 +88,9 @@ def sintatico(vetorTokens):
             validadeIf = verificarIf(vetTokens[posicao+1], posicao+1)
             if validadeIf == True:
                 saida.write("IF  \n")
+                geracao_cod.write(f"BNE $r{numero},$r{numero+1}, Else\n")
+                contadorTabela = contadorTabela + 1
+                numero = numero + 1
                 posicao = posicao + 5
                 i = i +5
             else:
@@ -64,6 +99,7 @@ def sintatico(vetorTokens):
             validadeElse = verificarElse(vetTokens[posicao+1], posicao+1)
             if validadeElse == True:
                 saida.write("ELSE \n")
+                geracao_cod.write("/*label*/\nElse: \n")
                 posicao = posicao + 2
                 i = i +2
             else:
@@ -72,7 +108,10 @@ def sintatico(vetorTokens):
         i+=1
         if i == len(vetTokens):
             break
-
+    for i in range(len(vetorIDs)):
+        if vetorIDs[i] not in tabelaAtt:
+            print(f"Variavel nao declarada: {vetorIDs[i]}\n")
+    
 
 def verificarDec(token, posicao):
     if token == 3:    
